@@ -13,17 +13,24 @@
     "install.sh",
     "README.md",
     "README.en.md",
-    "LICENSE"
+    "LICENSE",
+    "cordis.patch.yml",
+    "package.json"
   ],
   "keywords": [
-    "dsh",
-    "dsha",
+    "accessibility",
     "android",
     "autojs",
     "autojspro",
-    "accessibility",
-    "wechat",
-    "automation"
+    "automation",
+    "deepseek-harness",
+    "dsh",
+    "dsh-bundle",
+    "dsh-plugin",
+    "dsha",
+    "dsha-plugin",
+    "skill",
+    "wechat"
   ],
   "license": "MIT",
   "repository": {
@@ -37,5 +44,10 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "author": "YoruJiQAQ",
+  "homepage": "https://github.com/YoruJiQAQ/dsha-autojs-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/YoruJiQAQ/dsha-autojs-bridge/issues"
   }
 }

@@ -64,7 +64,7 @@ DSHA 自带 computer-use（`/app/ui/*` 读屏/点按）对**普通应用**很好
 
 | # | 依赖 | 说明 |
 |---|---|---|
-| 1 | **Android 手机 + DSHA App** | 本工具跑在 DSHA 的容器里（proot Ubuntu，python3 ≥ 3.10） |
+| 1 | **Android 手机 + DSHA App**<br>[DSH-APP/DSHA](https://github.com/DSH-APP/DSHA) **v0.1.7-rc2（正式版）**（实测版本） | 本工具跑在 DSHA 的容器里（proot Ubuntu，python3 ≥ 3.10） |
 | 2 | **Auto.js Pro 9.x**（`org.autojs.autojspro`） | 手机侧执行者。**必须满足**：① 无障碍服务已启用；② 开发者调试 → **允许远程调试** 开启；③ 首次连接时在弹框点**「永久允许」**<br>实测版本 **9.3.11-0**（作者：[@Azek431](https://github.com/Azek431)） |
 | 3 | **手机侧 MCP 服务脚本** `ajpro-mcp-server.js`<br>来源：[https://autojspro.cn/](https://autojspro.cn/)，**压缩包名 `ajpro-mcp-server最终版.zip`** | 放在手机 `/sdcard/脚本/ajpro-mcp-server.js`，在 AutoJsPro 里跑起来监听 `0.0.0.0:6666`。**本仓库不含该脚本**（版权归其作者），获取方式与接口契约见 [`phone/README.md`](phone/README.md) |
 | 4 | Python 3.10+ | 容器内已有；OCR 功能需要 `rapidocr_onnxruntime`（可选，见下） |
@@ -119,6 +119,37 @@ cd dsha-autojs-bridge
 > 该 bundle 只做"安装工具与技能"一件事，不注册服务、不改动其它插件的行，可安全与任意 profile 组合。
 
 ---
+
+## 4.5 在 DSHA 插件市场安装（符合 DSHA 插件规范）
+
+本仓库是 **dsh 插件**（`package.json` 声明 `dsh.bundle.patch`，patch 与 `main` 均随包发布），可用市场支持的方式安装：
+
+| 方式 | 做法 |
+|---|---|
+| **从链接安装（推荐）** | 在 [dsha.cc 插件市场](https://dsha.cc/) 或 App 内插件市场粘贴本仓库链接；**更推荐粘贴 [Releases](https://github.com/YoruJiQAQ/dsha-autojs-bridge/releases) 里 Release 附件的 HTTPS 直链**（固定版本、含已构建产物） |
+| **导入插件包** | 下载 Release 附件 → App 插件市场 →「导入插件包」→ 用系统文件选择器选中 |
+| **npm**（若已发布到 npm） | DSHA 终端执行 `dsha-plugin install <包名>` |
+| **手动** | `git clone` 后 `./install.sh`（与插件载入时执行的动作等价） |
+
+安装后请到**启动页重启 Web**，再回插件管理确认状态并验证功能。
+
+### 加载验证记录（投稿要求项）
+
+| 项 | 值 |
+|---|---|
+| DSHA 构建 | **v0.1.7-rc2（正式版）** |
+| dsh 版本 | **0.1.7-rc.2** |
+| 安装方式 | 仓库链接 / 插件包导入 / `install.sh` |
+| 加载验证 | 载入 `lib/index.js` → 安装 2 个工具（`/root/node-proxy.py`、`/root/ajrpc.py`）+ 2 个技能（`$DSH_HOME/skills/app-node-proxy`、`autojspro-rpc`），日志输出 `[dsha-autojs-bridge] 已就位 4 项…`；`install.sh --check` 全项通过 |
+| 功能验证 | 微信前台：`node-proxy.py dump --pkg com.tencent.mm` → 600+ 节点；`rows --ocr` → 图标行逐格标签；`node-proxy.py ensure` → `ajrpc.py` 远程拉起 MCP 成功；`ajrpc.py run <脚本>` 在手机执行成功 |
+
+### 依赖、数据与权限（投稿要求项）
+
+- **依赖**：手机侧 Auto.js Pro 9.x（无障碍服务 + 允许远程调试）与 `ajpro-mcp-server.js`；容器侧 Python ≥3.10（OCR 可选装 `rapidocr_onnxruntime`+`pillow`）。**无原生依赖**，纯 JS 插件 + Python 脚本。
+- **数据与隐私**：两个工具**只与本机 `127.0.0.1` 通信**（AutoJsPro 的 MCP / 调试服务），**不联网、不上传任何截图或文件、不外发到任何外部服务**。
+- **权限**：容器内写入 `/root`（两个脚本）与 `$DSH_HOME/skills`（两个技能）；手机侧需要无障碍与远程调试授权。
+- **不含**任何 API Key / token / 真实私人数据；技能与文档中的界面文案均为公开示例。
+
 
 ## 5. 手机侧一次性设置
 

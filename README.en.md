@@ -66,7 +66,7 @@ phone's own port.
 
 | # | Dependency | Notes |
 |---|---|---|
-| 1 | **Android phone + DSHA app** | These tools run inside DSHA's container (proot Ubuntu, python3 ≥ 3.10) |
+| 1 | **Android phone + DSHA app**<br>[DSH-APP/DSHA](https://github.com/DSH-APP/DSHA) **v0.1.7-rc2 (release)** (tested version) | These tools run inside DSHA's container (proot Ubuntu, python3 ≥ 3.10) |
 | 2 | **Auto.js Pro 9.x** (`org.autojs.autojspro`) | The phone-side executor. **Required**: ① accessibility service enabled; ② *Developer debugging → Allow remote debugging* enabled; ③ tap **“Allow permanently”** in the dialog on first connection<br>Tested version **9.3.11-0** (author: [@Azek431](https://github.com/Azek431)) |
 | 3 | **Phone-side MCP script** `ajpro-mcp-server.js`<br>Source: [https://autojspro.cn/](https://autojspro.cn/), **archive name `ajpro-mcp-server最终版.zip`** | Lives at `/sdcard/脚本/ajpro-mcp-server.js`; run it in AutoJsPro so it listens on `0.0.0.0:6666`. **This repository does not include it** (copyright belongs to its author) — see [`phone/README.md`](phone/README.md) for how to obtain it and the interface contract |
 | 4 | Python 3.10+ | Already present in the container; OCR features need `rapidocr_onnxruntime` (optional, below) |
@@ -128,6 +128,37 @@ This repository follows the DSHA bundle convention (`dsh.bundle.patch` in `packa
 > plugin rows, so it composes safely with any profile.
 
 ---
+
+## 4.5 Install from the DSHA plugin marketplace
+
+本仓库是 **dsh 插件**（`package.json` 声明 `dsh.bundle.patch`，patch 与 `main` 均随包发布），可用市场支持的方式安装：
+
+| 方式 | 做法 |
+|---|---|
+| **从链接安装（推荐）** | 在 [dsha.cc 插件市场](https://dsha.cc/) 或 App 内插件市场粘贴本仓库链接；**更推荐粘贴 [Releases](https://github.com/YoruJiQAQ/dsha-autojs-bridge/releases) 里 Release 附件的 HTTPS 直链**（固定版本、含已构建产物） |
+| **导入插件包** | 下载 Release 附件 → App 插件市场 →「导入插件包」→ 用系统文件选择器选中 |
+| **npm**（若已发布到 npm） | DSHA 终端执行 `dsha-plugin install <包名>` |
+| **手动** | `git clone` 后 `./install.sh`（与插件载入时执行的动作等价） |
+
+安装后请到**启动页重启 Web**，再回插件管理确认状态并验证功能。
+
+### 加载验证记录
+
+| 项 | 值 |
+|---|---|
+| DSHA 构建 | **v0.1.7-rc2（正式版）** |
+| dsh 版本 | **0.1.7-rc.2** |
+| 安装方式 | 仓库链接 / 插件包导入 / `install.sh` |
+| 加载验证 | 载入 `lib/index.js` → 安装 2 个工具（`/root/node-proxy.py`、`/root/ajrpc.py`）+ 2 个技能（`$DSH_HOME/skills/app-node-proxy`、`autojspro-rpc`），日志输出 `[dsha-autojs-bridge] 已就位 4 项…`；`install.sh --check` 全项通过 |
+| 功能验证 | 微信前台：`node-proxy.py dump --pkg com.tencent.mm` → 600+ 节点；`rows --ocr` → 图标行逐格标签；`node-proxy.py ensure` → `ajrpc.py` 远程拉起 MCP 成功；`ajrpc.py run <脚本>` 在手机执行成功 |
+
+### 依赖、数据与权限
+
+- **依赖**：手机侧 Auto.js Pro 9.x（无障碍服务 + 允许远程调试）与 `ajpro-mcp-server.js`；容器侧 Python ≥3.10（OCR 可选装 `rapidocr_onnxruntime`+`pillow`）。**无原生依赖**，纯 JS 插件 + Python 脚本。
+- **数据与隐私**：两个工具**只与本机 `127.0.0.1` 通信**（AutoJsPro 的 MCP / 调试服务），**不联网、不上传任何截图或文件、不外发到任何外部服务**。
+- **权限**：容器内写入 `/root`（两个脚本）与 `$DSH_HOME/skills`（两个技能）；手机侧需要无障碍与远程调试授权。
+- **不含**任何 API Key / token / 真实私人数据；技能与文档中的界面文案均为公开示例。
+
 
 ## 5. One-time phone setup
 
