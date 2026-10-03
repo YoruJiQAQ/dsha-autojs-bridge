@@ -1,0 +1,9 @@
+# dsha-autojs-bridge bundle patch
+#
+# 只做一件事：载入本仓库的插件，把容器侧工具与技能安装到运行环境（幂等）。
+# 不注册服务、不改动其它插件的行，因此可以安全地与任何 profile 组合。
+- insert:
+    - id: dsha-autojs-bridge
+      name: dsha-autojs-bridge
+      config:
+        toolsDir: /root

@@ -1,0 +1,41 @@
+{
+  "name": "dsha-autojs-bridge",
+  "version": "0.1.0",
+  "description": "DSHA ↔ Auto.js Pro bridge: click/read nodes in apps DSHA cannot see (via AutoJsPro MCP), and drive AutoJsPro remotely to run any script (via its debug RPC).",
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "tools",
+    "skills",
+    "phone",
+    "docs",
+    "install.sh",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "dsha",
+    "android",
+    "autojs",
+    "autojspro",
+    "accessibility",
+    "wechat",
+    "automation"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YoruJiQAQ/dsha-autojs-bridge.git"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
